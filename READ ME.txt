@@ -1,0 +1,58 @@
+
+
+This application is execlusive for IIT-Indore, Dept. of Astrophysics and Spacescience.
+It is made under the online internship programme(IoT & Android) of IIT-Indore 2021 by "ABIR ALI KHAN" from "Heritage Institute of Technology-Kolkata" under the mentorship of "Prof.Dr.Saurabh Das".
+This application backend is totally based on PyTHON version3 programming language.
+#####################################################################################################################################
+
+                                                        run.py
+
+#####################################################################################################################################
+
+This application is for:-
+    1)REAL TIME Monitoring the TEMPERATURE/HUMIDITY/PRESSURE/AIRQUALITY(PM2.5,PM10).
+    2)REAL TIME LIVE CHART FOR TEMPERATURE/HUMIDITY/PRESSURE/AIRQUALITY(PM2.5,PM10) (upto 5 data default---can be adjusted).
+    3)Showing the daily realtime average value for TEMPERATURE/HUMIDITY/PRESSURE/AIRQUALITY(PM2.5,PM10) on every new data sampleing in database.
+    3)CREATING the DATABASE for TEMPERATURE/HUMIDITY/PRESSURE/AIRQUALITY(PM2.5,PM10) in a particular csv file (in 20seconds of intervel by default/can be adjusted) in data folder datewise automacitally.
+    4)TO view the existing database of TEMPERATURE/HUMIDITY/PRESSURE/AIRQUALITY(PM2.5,PM10) for a perticular date you want for (if available is database) in a tabular format.
+    5) TO view the plotted graph of the TEMPERATURE/HUMIDITY/PRESSURE/AIRQUALITY(PM2.5,PM10) for a perticular date you want for (if available is database).
+
+
+TO RUN THE APPLICATION:-
+    1) PYTHON version 3.
+    2)ALL the HardWare setups.
+    2)You need to fullfill the all requirements.txt
+
+TECHNOLOGY USED:-
+    1) HardWare:-
+        ---Raspberry Pi version 3 B+.
+        ---Raspberry Pi SenseHAT Module.
+        ---NOVA SDS011 AirQuality Sensor.
+        ---Power Supply.
+    2)BackEnd:-
+        ---PyTHON 3
+            +++Flask Module
+            +++Pandas
+            +++sense_hat
+    3)FrontEnd:-
+        ---html
+        ---JavaScript
+            +++ajax
+            +++Chart.JS
+        ---jinja
+        ---css
+
+-------------------------------------------------------------------------------------------------------------------------------------
+
+
+ALL the data bases are saved in the ----"data"---- folder.!!!!!!!!!!!!!!!!!!!!
+
+1)To set the data sampling time---visit application=>sensor.py=>def write_logger(70 line)
+
+2) TO SET THE REALTIME DATA VIEWING sampling time------visit application=>templates=>welcome_page.html(259 line)
+
+2) TO SET THE REALTIME LIVE CHART VIEWING SENSEHAT(temp/humi) sampling time------visit application=>templates=>welcome_page.html(403 line)
+
+2) TO SET THE REALTIME LIVE CHART VIEWING SENSEHAT(pressure) sampling time------visit application=>templates=>welcome_page.html(482 line)
+
+2) TO SET THE REALTIME LIVE CHART FOR NOVA(SDS011)-AIRQUALITY (SET SAMPLEING TIME)------visit application=>templates=>welcome_page.html(576 line)

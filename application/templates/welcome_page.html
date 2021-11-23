@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Station</title>
+    <link rel="icon" href="/static/IITI%20Logo.png" type="image/png">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
+    <style>
+        #div1{
+            background-color: brown;
+            width: 100%;
+            height: 8rem;
+            align-content: center;
+            
+            }
+            #div1_1{
+                float: left;
+                width: 15%;
+                height: 8rem;              
+            }
+            #div1_2{
+                float: left;
+                padding-left: 2%;
+            }
+
+            #div2{
+                background-color: cornflowerblue;
+                float: left;
+                width: 50%;
+                height: auto;
+                overflow: hidden;
+            }
+            #div2_1{
+                background-color: crimson;
+                width: 100%;
+                height: 4.045rem;
+                float: left;
+                align-content: center;
+            }
+            #div2_2{
+                background-color:cornflowerblue;
+                width: 49%;
+                height: 10rem;
+                text-align: center;
+                float: left;
+                overflow: hidden;
+            }
+
+            #div3{
+
+                float: right;
+                width: 49.46%;
+                height: 38.084rem;
+                background-color :darkgray;
+            }
+
+
+            #devider{
+                float: left;
+                width: 100%;
+                height: .25rem;
+                background-color: powderblue;
+            }
+            #devider2{
+                float: left;
+                width: .25rem;
+                height: 10rem;
+                background-color: powderblue;
+            }
+            #deviderpos50{
+                float: left;
+                width: .25rem;
+                height: 38.084rem;
+                background-color: powderblue;
+            }
+
+
+            #div2_logo{
+                float: left;
+                height: 10rem;
+                background-color: brown;
+                padding-top: 3.8rem;
+                width: 25%;
+            }
+            #div2_last{
+                float: left;
+                width: 100%;
+                height: 4.7rem;
+                background-color: crimson;
+                text-align: center;
+            }
+
+            #chartAreaWrapper {
+                float: left;
+                width: 100%;
+                height: 48%;
+                background-color: blueviolet;
+                overflow: hidden;
+            }
+            #pm{
+                float: left;
+                width: 37.5%;
+                height: 5.5rem;
+                padding-top: 6%;
+                padding-bottom: 5%;
+            }
+            #databoxes{
+                float: left;
+                width: 75%;
+                height: 7rem;
+                padding-bottom: 5%;
+            }
+    </style>
+</head>
+
+<body style="background-color:powderblue;" align="center">
+
+    <div id="fullscreen" style="float: left;overflow: hidden; background-color: darkgray; width: 100%;height: 100%;">
+        <!--Top tool bar---------------------------------------------------------->
+        <div id="div1" class="container">
+            <div id="div1_1" class="container">
+                <img src="/static/IITI%20Logo.png" alt="Logo" style=" height: 90%;padding-top: 3%;" >
+            </div>
+            <div id="div1_2" class="container">
+                <h2> <font color='white'>Indian Institute of Technology - Indore</font> </h2>
+                <p><font color='white'><b>Department of Astronomy, Astrophysics and Space Engineering (DAASE)</b><br/>
+                    Khandwa Rd, Simrol, Madhya Pradesh - 453552</font>
+                </p>
+            </div>
+        </div>
+
+
+
+
+        <!--left side realtime data pannel----------------------------------------->
+        <div id="devider"></div>
+        <div id="div2" class="log_data" align="center">
+
+            <div id="div2_1"><h2><u>Real Time Data</u></h2></div>
+            
+            <!--left side realtime data pannel      ----------------------TEMPERATURE------------------->
+            <div id="devider"></div>
+            <div id="div2_2">
+                <div id="div2_logo" class="container">
+                    <img src="/static/heat.png" alt="Logo" width="45" height="45">
+                </div>
+                <div id="databoxes">
+                    <p class="temp" style="font-size:220%"></p>
+                    <p class="avg_temp" style="font-size:100%;"></p>
+                </div>
+                <h3 style="position: static;">Temperature</h3>
+            </div>
+
+            <!--left side realtime data pannel       --------------------------HUMIDITY--------------->
+            <div id="devider2"></div>
+            <div id="div2_2">
+                <div id="div2_logo" class="container">
+                    <img src="/static/humidity.png" alt="Logo" width="35" height="35">
+                </div>
+                <div id="databoxes">
+                    <p class="hummi" style="font-size:220%"></p>
+                    <p class="avg_humi" style="font-size:100%;"></p>
+                </div>
+                <h3>Humidity</h3>
+            </div>
+
+            <!--left side realtime data pannel       ----------------------PRESSURE------------------->
+            <div id="devider"></div>
+            <div id="div2_2">
+                <div id="div2_logo" class="container">
+                    <img src="/static/compressor.png" alt="Logo" width="35" height="35">
+                </div>
+                <div id="databoxes">
+                    <p class="press" style="font-size:220%"></p>
+                    <p class="avg_press" style="font-size:100%;"></p>
+                </div>
+                <h3>Pressure</h3>
+            </div>
+
+            <!--left side realtime data pannel          -------------------------AriQuality---------------->
+            <div id="devider2"></div>
+            <div id="div2_2">
+                <div id="div2_logo" class="container">
+                    <img src="/static/factory.png" alt="Logo" width="35" height="35">
+                </div>
+                <div id="pm" class="container">
+                    <label for="pm25">PM2.5</label>
+                    <p class="pm25" style="font-size:120%"></p>  
+                    <p class="avg_pm25" style="font-size:100%;"></p>   
+                </div>
+                <div id="pm" class="container">
+                    <label for="pm10">PM10</label>
+                    <p class="pm10" style="font-size:120%"></p> 
+                    <p class="avg_pm10" style="font-size:100%;"></p>   
+                </div>
+                <h3>AirQuality</h3>
+            </div>
+
+
+            <!------------------------------------------------------AFTER DATA BOXES AT DIV-2----------------------------------------->
+            <div id="devider"></div>
+            <div id="div2_1">
+                <div style="float: left; padding-left: 40%;"><p>Last Update On:</p></div>
+                <div id="update_time" style="float: left; padding-left: 1%;"><p class="time"></p></div>
+            </div>
+
+            <div id="devider"></div>
+            <div id="div2_1">
+                <div style="float: left;background-color: chocolate;width: 15%; height:4.045rem;">
+                    <h4>Status</h4>
+                </div>
+                <div id="status" style="float: left; width: 85%; height: 4.045rem; padding-top: 3%;">
+                    <marquee behavior="scroll" direction="left">
+                        Welcome! This is the Weather Station at IIT-Indore.
+                        <span style="margin-left:5in;"></span>
+                        Data logging is running in background.
+                        <span style="margin-left:5in;"></span>
+                        This Real Time Datas are update in every 05 seconds.
+                        <span style="margin-left:5in;"></span>
+                    </marquee>
+                </div>
+            </div>
+
+            <div id="devider"></div>
+            <div id="div2_last">
+                <a href="/show_logs" style="position:relative;top: 18px;"><button style="font-size:120%;background-color: #f44336;border-radius: 8px;transition-duration: 0.4s;height: 2.5rem;cursor: pointer;">Data History</button></a>
+            </div>
+        </div>
+
+
+        <!--left side realtime data pannel           JS for realtime DataBoxes----------------------------------------->
+        <script type="text/javascript">
+
+        const temperature = $(".temp")
+        const humidity = $(".hummi")
+        const pressure = $(".press")
+        const pm25 = $(".pm25")
+        const pm10 = $(".pm10")
+        const time = $(".time")
+        var realtimedata = function get_data() {
+            $.ajax({
+                method: "get",
+                url: window.origin + "/real_time",
+                accept: "application/json",
+                success: (response) => {
+                    //console.log(response)
+                    temperature.html(`<p><b>${response.Temperature} &#8451;</b></p>`)
+                    humidity.html(`<p><b>${response.Humidity} %</b></p>`)
+                    pressure.html(`<p><b>${response.Pressure} mBar</b></p>`)
+                    pm25.html(`<p><b>${response.Pm25} &mu;g/m&sup3;</b></p>`)
+                    pm10.html(`<p><b>${response.Pm10} &mu;g/m&sup3;</b></p>`)
+                    time.html(`<p><b>${response.Time}</b></p>`)
+                }
+            })
+        }
+        setInterval(realtimedata, 5000);    ////------------------------------------------------------REAL TIME DATA (SET SAMPLEING TIME)
+
+        </script>
+
+        <script>
+            const avg_temp = $(".avg_temp")
+            const avg_humi = $(".avg_humi")
+            const avg_press = $(".avg_press")
+            const avg_pm25 = $(".avg_pm25")
+            const avg_pm10 = $(".avg_pm10")
+            var avg = function get_data(){
+                $.ajax({
+                    url: window.origin + "/get_avg_value_realtime",
+                    method: "get",
+                    accept: "application/json",
+                    success: (response) =>{
+                        console.log(response)
+                        avg_temp.html(`<p>&asymp; ${response.temperature}&#8451;</p>`)
+                        avg_humi.html(`<p>&asymp; ${response.humidity}%</p>`)
+                        avg_press.html(`<p>&asymp; ${response.pressure} mBar</p>`)
+                        avg_pm25.html(`<p>&asymp; ${response.pm25}&mu;g/m&sup3;</p>`)
+                        avg_pm10.html(`<p>&asymp; ${response.pm10}&mu;g/m&sup3;</p>`)
+                    }
+                })
+            }
+            setInterval(avg, 5000);
+            
+        </script>
+
+
+
+
+
+        <!--Right side live chart data pannel-------------------------------------------------------------------------------------->
+        <div id="deviderpos50"></div>
+        <div id="div3" class="chartbox" align="center">
+
+            <!--right side live chart data pannel                           -----------------------LIVE CHART FOR SENSEHAT------------------>
+            <div class="chartAreaWrapper"> 
+                <canvas id="myChart" class="Temp_Humi" style="width: 95%; height: 18rem;position: relative;"></canvas>
+                <canvas id="myChart3" class="pressure" style="width: 95%; height: 18rem; visibility: hidden;"></canvas>
+            </div>
+            <button class="SeeMore2" style="vertical-align:middle;border-radius: 4px;background-color: goldenrod;color: #FFFFFF;cursor: pointer;width: 15%;" > Pressure</button>
+
+            <!--right side live chart data pannel               --------------------LIVE CHART FOR NOVA SDS011--------------------->
+            <div class="chartAreaWrapper"> 
+                <canvas id="myChart2" style="width: 95%; height: 17rem;"></canvas>
+            </div>
+
+            <div style="width: 100%; float: left;"><p style="font-size: x-small;padding-right: 2%;" align='right'>This project is made by Abir-HIT-K under the mentorship of Prof.Dr.Saurabh Das.</p></div>
+        </div>
+
+
+
+
+
+        <!--Right side live chart data pannel           JS for liveChart ---------------SENSEHAT-TEMP/HUMI-------------------------->    
+        <script type="">
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [], //for X-axis time data.
+                    datasets: [
+                        {
+                            label: 'Temperature',
+                            data: [],  //for Y-axis temperature data.
+                            backgroundColor:["red"],
+                            fill: false,
+                            tension: 0.1,
+                            borderColor: 'red',
+                        },
+                        {
+                            label: 'Humidity',
+                            data: [],   //for Y-axis Humidity data.
+                            backgroundColor:["green"],
+                            fill: false,
+                            tension: 0.1,
+                            borderColor: 'green',
+                        },
+                    ],
+                },
+                options:{
+                    responsive:false,
+                    layout:{
+                        padding:{
+                            left:0,
+                            right: 0,
+                            top: 0,
+                            bottom: 0,
+                        }
+                    },
+                    plugins:{
+                        tooltips:{
+                            enabled: true,
+                            titleAlign: "center",
+                        },
+                        title:{
+                            display: true,
+                            text: "SenseHat",
+                            font: {
+                                size:25,
+                                weight:'bold',
+                            },
+                        },
+                        legend:{
+                            display: true,
+                            position: "bottom",
+                            align: 'top',
+                        },
+                    },
+                    animation:{
+                        duration: 5000,
+                    },
+                },
+            });
+
+            var x = function updateChart() {
+                var plot_data= $.get('/real_time');
+                var tm = plot_data.done(function (resp){
+                    //console.log("time", resp.Time);
+                    //console.log("temperature", resp.Temperature);
+                    //console.log("humidity", resp.Humidity);
+                    //console.log("pressure", resp.Pressure);
+
+                    myChart.data.labels.pop();
+                    myChart.data.labels.pop();
+                    myChart.update();
+                    
+                    if (myChart.data.labels.length > 5) {
+                        myChart.data.labels.shift();
+                        myChart.data.datasets[0].data.shift();
+                        myChart.data.datasets[1].data.shift();
+                    }
+
+                    myChart.data.labels.push(resp.Time);
+                    myChart.data.labels.push(resp.Time+2);
+                    myChart.data.labels.push(resp.Time+4);
+                    myChart.data.datasets[0].data.push(resp.Temperature);
+                    myChart.data.datasets[1].data.push(resp.Humidity);
+                    myChart.options.animation.duration = 0;
+                    myChart.update();
+                })
+            }
+            setInterval(x, 5000);    /////------------------------------------------------------LIVE CHART FOR SENSEHAT-TEMP/HUMI (SET SAMPLEING TIME)
+        </script>
+
+        <!--Right side live chart data pannel           JS for liveChart -----------------SENSEHAT-PRESSURE------------------------>
+        <script type="">
+            var ctx = document.getElementById('myChart3').getContext('2d');
+            var myChart3 = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [], //for X-axis time data.
+                    datasets: [
+                        {
+                            label: 'Pressure',
+                            data: [],    //for Y-axis pressure data.
+                            backgroundColor:["black"],
+                            fill: false,
+                            tension: 0.1,
+                            borderColor: 'black',
+                        },
+                    ],
+                },
+                options:{
+                    responsive:false,
+                    layout:{
+                        padding:{
+                            left:0,
+                            right: 0,
+                            top: 0,
+                            bottom: 0,
+                        }
+                    },
+                    plugins:{
+                        tooltips:{
+                            enabled: true,
+                            titleAlign: "center",
+                        },
+                        title:{
+                            display: true,
+                            text: "SenseHat",
+                            font: {
+                                size:25,
+                                weight:'bold',
+                            },
+                        },
+                        legend:{
+                            display: true,
+                            position: "bottom",
+                            align: 'top',
+                        },
+                    },
+                    animation:{
+                        duration: 5000,
+                    },
+                },
+            });
+
+            var x = function updateChart() {
+                var plot_data= $.get('/real_time');
+                var tm = plot_data.done(function (resp){
+                    //console.log("time", resp.Time);
+                    //console.log("pressure", resp.Pressure);
+                    
+                    myChart3.data.labels.pop();
+                    myChart3.data.labels.pop();
+                    myChart3.update();
+
+                    if (myChart3.data.labels.length > 5) {
+                        myChart3.data.labels.shift();
+                        myChart3.data.datasets[0].data.shift();
+                    }
+                    
+                    myChart3.data.labels.push(resp.Time);
+                    myChart3.data.labels.push(resp.Time+2);
+                    myChart3.data.labels.push(resp.Time+4);
+                    myChart3.data.datasets[0].data.push(resp.Pressure);
+                    myChart3.options.animation.duration = 0;
+                    myChart3.update();
+                })
+            }
+            setInterval(x, 5000);    /////------------------------------------------------------LIVE CHART FOR SENSEHAT-PRESSURE (SET SAMPLEING TIME)
+        </script>
+
+        <!--Right side live Bar chart data pannel           JS for liveChart ------------------NOVA-SDS011(AirQuality)----------------------->
+        <script type="">
+            var ctx = document.getElementById('myChart2').getContext('2d');
+            var myChart2 = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: [], //for X-axis time data.
+                    datasets: [
+                        {
+                            label: 'PM2.5',
+                            data: [],  //for Y-axis temperature data.
+                            backgroundColor:["red"],
+                            fill: false,
+                            tension: 0.1,
+                            borderColor: 'red',
+                        },
+                        {
+                            label: 'PM10',
+                            data: [],   //for Y-axis Humidity data.
+                            backgroundColor:["green"],
+                            fill: false,
+                            tension: 0.1,
+                            borderColor: 'green',
+                        },
+                    ],
+                },
+                options:{
+                    responsive:false,
+                    layout:{
+                        padding:{
+                            left:0,
+                            right: 0,
+                            top: 0,
+                            bottom: 0,
+                        }
+                    },
+                    plugins:{
+                        tooltips:{
+                            enabled: true,
+                            titleAlign: "center",
+                        },
+                        title:{
+                            display: true,
+                            text: "SDS011",
+                            font: {
+                                size:25,
+                                weight:'bold',
+                            },
+                        },
+                        legend:{
+                            display: true,
+                            position: "bottom",
+                            align: 'top',
+                        },
+    
+                    },
+                    animation:{
+                        duration: 5000,
+                    },
+                },
+            });
+    
+            var x = function updateChart() {
+                var plot_data= $.get('/real_time');
+                var tm = plot_data.done(function (resp){
+                    //console.log("time", resp.Time);
+                    //console.log("pm2.5", resp.Pm25);
+                    //console.log("pm10", resp.Pm10);
+    
+                    myChart2.data.labels.pop();
+                    myChart2.data.labels.pop();
+                    myChart2.update();
+    
+                     
+                    if (myChart2.data.labels.length > 5) {
+                        myChart2.data.labels.shift();
+                        myChart2.data.datasets[0].data.shift();
+                        myChart2.data.datasets[1].data.shift();
+                        
+                    }
+                    
+                    myChart2.data.labels.push(resp.Time);
+                    myChart2.data.labels.push(resp.Time+2);
+                    myChart2.data.labels.push(resp.Time+4);
+                    myChart2.data.datasets[0].data.push(resp.Pm25);
+                    myChart2.data.datasets[1].data.push(resp.Pm10);
+                   
+                    myChart2.options.animation.duration = 0;
+                    myChart2.update();
+                })
+            }
+            setInterval(x, 5000);   /////------------------------------------------------------LIVE CHART FOR NOVA(SDS011)-AIRQUALITY (SET SAMPLEING TIME)
+        </script>
+
+        <!--Right side live chart data pannel           JS for liveChart -----------------SENSEHAT Chart SWITCHING between TEMP/HUMI and PRESSURE------------------------>
+        <script>
+            window.onload = function () {
+                $(".pressure").css("position", "relative");
+                $(".pressure").css("position", "absolute");
+                $(".pressure").css("width", "40%");
+            }
+
+            $(document).ready(function(){
+                $(".SeeMore2").click(function(){
+                    var $this = $(this)
+                    $this.toggleClass('SeeMore2');
+
+                    if ($(".pressure").css("visibility")=="hidden"){
+                        $(".Temp_Humi").css("visibility", "hidden");
+                        $(".Temp_Humi").css("position", "absolute");
+                        $(".Temp_Humi").css("width", "40%");
+                        $(".pressure").css("position", "relative");
+                        $(".pressure").css("visibility", "visible");
+                        $(".pressure").css("width", "95%");
+                        $this.text('Temp/Humidity');
+                    }
+                    else{
+                        $(".pressure").css("visibility", "hidden");
+                        $(".pressure").css("position", "absolute");
+                        $(".pressure").css("width", "40%");
+                        $(".Temp_Humi").css("position", "relative");
+                        $(".Temp_Humi").css("width", "95%");
+                        $(".Temp_Humi").css("visibility", "visible");
+                        $this.text('Pressure');
+                    }
+                });
+            });
+        </script>
+    </div>
+</body>
+</html>

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Station</title>
+    <link rel="icon" href="{{url_for('static',filename='IITI Logo.png')}}" type="image/png">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
+    <style>
+        #div1{
+            background-color: brown;
+            width: 100%;
+            height: 8rem;
+            overflow: hidden;
+        }
+        #div1_1{
+            float: left;
+            width: 15%;
+            height: 8rem;
+        }
+        #div1_2{
+            float: left;
+            width: 50%;
+            height: 8rem;
+            font-size: 100%;
+        }
+        #div1_3{
+            background-color: crimson;
+            float: right;
+            width: 35%;
+            height: 8rem;
+        }
+        #buttons{
+            float: left;
+            width: 15%;
+            padding-top: 3%;
+        }
+        #div2{
+            float: left;
+            background-color: cornflowerblue;
+            width: 45%;
+            height: 38.084rem;
+            overflow: hidden;
+        }
+        #div3{
+            background-color: darkgray;
+            float: right;
+            width: 54.5%;
+            height: 38.084rem;
+            overflow: hidden;
+        }
+        #devider{
+            float: left;
+            width: 100%;
+            height: .25rem;
+            background-color: powderblue;
+            }
+        #deviderpos50{
+            float: left;
+            width: .25rem;
+            height: 38.084rem;
+            background-color: powderblue;
+        }
+    </style>
+</head>
+<body style="background-color:powderblue;" align="center">
+    <div id="fullscreen" style="float: left;overflow: hidden; background-color: darkgray; width: 100%;height: 100%;">
+        <!--Top tool bar------------------------------------------------------------------------------------------------------------->
+        <div id="div1" class="container">
+            <div id="div1_1" class="container">
+                <img src="/static/IITI%20Logo.png" alt="Logo" style=" height: 90%;padding-top: 3%;" >
+            </div>
+            <div id="div1_2" class="container">
+                <h2> <font color='white'>Indian Institute of Technology - Indore</font> </h2>
+                <p><font color='white'><b>Department of Astronomy, Astrophysics and Space Engineering (DAASE)</b><br/>
+                    Khandwa Rd, Simrol, Madhya Pradesh - 453552</font>
+                </p>
+            </div>
+            
+            <!--Top tool bar           date Picker div form------------------------------------------------------------------------------------------------------------->
+            <div id="div1_3" class="row">
+                <form id="datetime_range" action="/get_logdata" method="GET">
+                    <label for="from"><b>Mandatory Input Format: DD-MM-YYYY</b></label><hr/> 
+                    <div class="three columns">
+                        <label for="from">Pick a Date:</label>
+                        <input class="u-full-width" id="datepicker" type="text" value="{{select_date}}" name="date" >
+                    </div>
+                </form> 
+                <div id="buttons" style="padding-left: 25%;">
+                    <button class="button-primary" onclick="send_date()" style="height: 2.25rem;cursor: pointer;" id="submit_button">Show Data</button>
+                </div>
+                <div id="buttons">
+                    <button class="plotbutton" onclick="plot()" style="height: 2.25rem;cursor: pointer;" id="submit_button">Plot SenseHAT</button>
+                </div>
+                <div id="buttons">
+                    <button class="plotbutton" onclick="plot2()" style="height: 2.25rem;cursor: pointer;" id="submit_button">Plot AirQuality</button>
+                </div>
+                <div id="buttons" style="width: 9%;">
+                    <a href="/"><button class="button-primary" style="height: 2.25rem;cursor: pointer;" id="submit_button">Home</button></a>
+                </div>
+            </div>
+        </div>
+
+        <!--left side data pannel--------------------------------------------------------------------------------------------------->
+        <div id="devider"></div>
+        <div id="div2" class="log_data" align="center">
+            <h3>Weather Station Report</h3>
+            <p class="date"></p>
+            <table border="1" class="log_table" align="center" width="90%"></table>
+            <p class="data_status"></p>
+        </div>
+
+        <!--left side data pannel          JS for DataBase-------------------------------------------------------------------------------------------->
+        <script type="text/javascript">
+            function send_date() {
+                const formdata = $("form")
+                console.log(formdata)
+                const status2 = $(".date")
+                const table_data = $(".log_table")
+                const status = $(".data_status")
+                $.ajax({
+                    url: window.origin + "/get_logdata",
+                    method: "post",
+                    accept: "application/json",
+                    data: formdata.serialize(),
+                    success: (response) => {
+                        console.log(response)
+
+                        if (response.length >= 18){
+                                $(".log_data").css("overflow-y", 'scroll');
+                            }
+                            else{
+                                $(".log_data").css("overflow-y", 'hidden');
+                            }
+
+                        to_append = `<tr align="center" style="font-weight:bold"><td rowspan="2">Time</td><td colspan="3">SenseHat</td><td colspan="2">SDS011</td></tr><tr align="center" style="font-weight:bold"><td>Temprature(&#8451;)</td><td>Humidity(%)</td><td>Pressure(mBar)</td><td>PM2.5(&mu;g/m&sup3;)</td><td>PM10(&mu;g/m&sup3;)</td></tr>`
+                        for (var i in response) {
+                            console.log(i)
+                            var time = response[i]["Time"]
+                            var temp = response[i]["Temperature"]
+                            var hum = response[i]["Humidity"]
+                            var pres = response[i]["Pressure"]
+                            var pm25 = response[i]["Pm2.5"]
+                            var pm10 = response[i]["Pm10"]
+                            to_append += `<tr><td align="center">${time}</td> <td align="center">${temp}</td> <td align="center">${hum}</td> <td align="center">${pres}</td><td align="center">${pm25}</td><td align="center">${pm10}</td></tr>`
+                        }
+                        status2.html(`<p>Date: ${document.getElementById("datepicker").value} </p>`)
+                        table_data.html(to_append)
+                        status.html(`<p>---End---</p>`)
+                    }
+                })
+            }
+        </script>
+
+        <!--right side chart data pannel-------------------------------------------------------------------------------------------->
+        <div id="deviderpos50"></div>
+        <div id="div3" align='center' class="chartBox">
+            <!--right side chart data pannel        Canvas for SenseHaT-------------------------------------------------------------------------------------------->
+            <div id="div3_1" class="temp_humi_press" style="float: left;width: 100%;height: 50%; overflow: hidden;">
+                <canvas id="myChart"  aria-label="Chart" role="img" class="databaseChart" style="width: 100rem; height: 100%; padding-left: 1rem; padding-right: 1rem;"></canvas>
+            </div>
+            <!--right side chart data pannel       canvas for AirQuality-------------------------------------------------------------------------------------------->
+            <div id="div3_2" class="pm25_pm10" style="float: left;width: 100%;height: 50%; overflow: hidden;">
+                <canvas id="Chart2"  aria-label="Chart2" role="img" class="databaseChart1" style="width: 100rem; height: 100%; padding-left: 1rem; padding-right: 1rem;"></canvas>
+            </div>
+        </div>
+
+        <!--right side chart data pannel      JS for SenseHaT-------------------------------------------------------------------------------------------->
+        <script type="">
+            function plot() {
+                const formdata = $("form")
+                $.ajax({
+                    url: window.origin + "/get_logdata_for_plot",
+                    method: "post",
+                    accept: "application/json",
+                    data: formdata.serialize(),
+                    success: (response) =>{
+                        //console.log(response)
+                        console.log("time", response.time);
+                        console.log("temperature", response.temperature);
+                        console.log("humidity", response.humidity);
+                        console.log("pressure", response.pressure);
+
+
+                        if (response.time.length >= 28){
+                            make_width = response.time.length*2 + 'rem';
+                            console.log(make_width);
+                            $(".databaseChart").css("width", make_width);
+                            
+                            $(".temp_humi_press").css("overflow-x", 'scroll');
+                        }
+                        else{
+                            make_width=50+'rem'
+                            $(".databaseChart").css("width", make_width);
+                        }
+
+                        var ctx = document.getElementById('myChart').getContext('2d');
+                        var myChart = new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: response.time, //for X-axis time data.
+                                datasets: [
+                                    {
+                                        label: 'Temperature',
+                                        data: response.temperature,  //for Y-axis temperature data.
+                                        backgroundColor:["red"],
+                                        fill: false,
+                                        tension: 0.1,
+                                        borderColor: 'red',
+                                    },
+                                    {
+                                        label: 'Humidity',
+                                        data: response.humidity,   //for Y-axis Humidity data.
+                                        backgroundColor:["green"],
+                                        fill: false,
+                                        tension: 0.1,
+                                        borderColor: 'green',
+                                    },
+                                    {
+                                        label: 'Pressure',
+                                        data: response.pressure,    //for Y-axis pressure data.
+                                        backgroundColor:["black"],
+                                        fill: false,
+                                        tension: 0.1,
+                                        borderColor: 'black',
+                                    },
+                                ],
+                            },
+                            options:{
+                                responsive:false,
+                                layout:{
+                                    padding:{
+                                        left:0,
+                                        right: 0,
+                                        top: 0,
+                                        bottom: 0,
+                                    }
+                                },
+                                plugins:{
+                                    tooltips:{
+                                        enabled: true,
+                                        titleAlign: "center",
+                                    },
+                                    title:{
+                                        display: true,
+                                        text: "SenseHat",
+                                        font: {
+                                            size:25,
+                                            weight:'bold',
+                                        },
+                                    },
+                                    legend:{
+                                        display: true,
+                                        position: "bottom",
+                                        align: 'top',
+                                    },
+                                },
+                                animation:{
+                                    duration: 5000,
+                                },
+                            },
+                        });
+                    }
+                })
+            } 
+        </script>
+
+        <!--right side chart data pannel    JS for AirQuality-------------------------------------------------------------------------------------------->
+        <script type="">
+            function plot2() {
+                const formdata = $("form")
+                $.ajax({
+                    url: window.origin + "/get_logdata_for_plot",
+                    method: "post",
+                    accept: "application/json",
+                    data: formdata.serialize(),
+                    success: (response) =>{
+                        //console.log(response)
+                        console.log("time", response.time);
+                        console.log("temperature", response.pm25);
+                        console.log("humidity", response.pm10);
+
+                        if (response.time.length >= 28){
+                            make_width = response.time.length*2 + 'rem';
+                            console.log(make_width);
+                            $(".databaseChart1").css("width", make_width);
+                            $(".pm25_pm10").css("overflow-x", 'scroll');
+                        }
+                        else{
+                            make_width=50+'rem'
+                            $(".databaseChart1").css("width", make_width);
+                        }
+
+                        var ctx = document.getElementById('Chart2').getContext('2d');
+                        var Chart2 = new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: response.time, //for X-axis time data.
+                                datasets: [
+                                    {
+                                        label: 'PM2.5',
+                                        data: response.pm25,  //for Y-axis pm2.5 data.
+                                        backgroundColor:["red"],
+                                        fill: false,
+                                        tension: 0.1,
+                                        borderColor: 'red',
+                                    },
+                                    {
+                                        label: 'PM10',
+                                        data: response.pm10,   //for Y-axis pm10 data.
+                                        backgroundColor:["green"],
+                                        fill: false,
+                                        tension: 0.1,
+                                        borderColor: 'green',
+                                    },
+                                ],
+                            },
+                            options:{
+                                responsive:false,
+                                layout:{
+                                    padding:{
+                                        left:0,
+                                        right: 0,
+                                        top: 0,
+                                        bottom: 0,
+                                    }
+                                },
+                                plugins:{
+                                    tooltips:{
+                                        enabled: true,
+                                        titleAlign: "center",
+                                    },
+                                    title:{
+                                        display: true,
+                                        text: "Nova SDS011",
+                                        font: {
+                                            size:25,
+                                            weight:'bold',
+                                        },
+                                    },
+                                    legend:{
+                                        display: true,
+                                        position: "bottom",
+                                        align: 'left',
+                                    },
+                                },
+                                animation:{
+                                    duration: 5000,
+                                },
+                            },
+                        });
+                    }
+                })
+            }
+        </script>
+    </div>
+</body>
+</html>
